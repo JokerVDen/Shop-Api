@@ -1,0 +1,7 @@
+FROM mysql:5.7
+
+ARG MYSQL_DATABASES
+ARG MYSQL_USER
+
+RUN echo "CREATE DATABASE $MYSQL_DATABASES;" >> /docker-entrypoint-initdb.d/db.sql
+RUN echo "GRANT ALL ON $MYSQL_DATABASES.* TO '$MYSQL_USER'@'%' WITH GRANT OPTION;" >> /docker-entrypoint-initdb.d/db.sql
