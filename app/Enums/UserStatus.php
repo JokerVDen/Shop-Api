@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Enums\User;
+namespace App\Enums;
 
 use BenSampo\Enum\Enum;
 
-final class Status extends Enum
+final class UserStatus extends Enum
 {
     const VERIFIED = '1';
     const UNVERIFIED = '0';

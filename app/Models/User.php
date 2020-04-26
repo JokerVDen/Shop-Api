@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\User\Status;
-use App\Enums\User\Type;
+use App\Enums\UserStatus;
+use App\Enums\UserType;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Str;
@@ -48,12 +48,12 @@ class User extends Authenticatable
 
     public function isVerified()
     {
-        return $this->verified == Status::VERIFIED;
+        return $this->verified == UserStatus::VERIFIED;
     }
 
     public function isAdmin()
     {
-        return $this->admin == Type::ADMIN;
+        return $this->admin == UserType::ADMIN;
     }
 
     public static function generateVerificationCode()

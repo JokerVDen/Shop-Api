@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Product\Status;
+use App\Enums\ProductStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
@@ -18,7 +18,7 @@ class Product extends Model
 
     public function isAvailable()
     {
-        return $this->status == Status::AVAILABLE_PRODUCT;
+        return $this->status == ProductStatus::AVAILABLE;
     }
 
     public function seller()
