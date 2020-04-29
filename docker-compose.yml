@@ -12,7 +12,6 @@ services:
       - node
     volumes:
       - ./:/var/www
-      - ./docker/nginx/ssl:/etc/nginx/ssl
       - ./storage/docker/nginx:/var/log/nginx
     ports:
       - "${HTTP_PORT_DOCKER}:${HTTP_PORT}"
