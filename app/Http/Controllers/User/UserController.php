@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Exceptions\User\AdminNotVerifiedException;
 use App\Exceptions\User\UpdateNotDifferentValuesException;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
 use App\Models\User;
@@ -12,7 +12,7 @@ use App\Services\User\UserService;
 use Exception;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * @var UserService
@@ -32,7 +32,7 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->service->getAllUsers();
-        return response()->json(['data' => $users]);
+        return $this->showAll($users);
     }
 
     /**
@@ -44,7 +44,7 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         $user = $this->service->storeUser($request->all());
-        return  response()->json(['data'=>$user]);
+        return  $this->showOne($user);
     }
 
     /**
@@ -56,7 +56,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
-        return response()->json(['data' => $user]);
+        return  $this->showOne($user);
     }
 
     /**
@@ -71,20 +71,12 @@ class UserController extends Controller
         try {
             $updatedUser = $this->service->updateUser($user, $request->all());
         } catch (AdminNotVerifiedException $e) {
-            return response()->json(
-                [
-                    'error' => __('user/error.only_verified_user_can_modify_the_admin_field'),
-                    'code' => 422
-                ], 422);
+            return $this->errorResponse(__('user/error.only_verified_user_can_modify_the_admin_field'), 409);
         } catch (UpdateNotDifferentValuesException $e) {
-            return response()->json(
-                [
-                    'error' => __('user/error.need_to_specify_a_different_values'),
-                    'code' => 422
-                ], 422);
+            return $this->errorResponse(__('user/error.need_to_specify_a_different_values'), 422);
         }
 
-        return response()->json(['data' => $updatedUser]);
+        return  $this->showOne($updatedUser);
     }
 
     /**
@@ -97,6 +89,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-        return response()->json(['data' => $user]);
+        return  $this->showOne($user);
     }
 }

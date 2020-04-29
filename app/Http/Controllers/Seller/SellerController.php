@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Seller;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Services\Seller\SellerService;
 
-class SellerController extends Controller
+class SellerController extends ApiController
 {
     /**
      * @var SellerService
@@ -25,7 +25,7 @@ class SellerController extends Controller
     public function index()
     {
         $sellers = $this->service->getAllSellers();
-        return response()->json(['data' => $sellers]);
+        return $this->showAll($sellers);
     }
 
     /**
@@ -39,6 +39,6 @@ class SellerController extends Controller
         $seller = $this->service->getSeller($id);
         if (!$seller)
             abort(404);
-        return response()->json(['data' => $seller]);
+        return $this->showOne($seller);
     }
 }

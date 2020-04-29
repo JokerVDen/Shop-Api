@@ -44,7 +44,7 @@ class UserUpdateTest extends TestCase
     /**
      * @test
      */
-    public function assert_422_when_user_not_verified_and_adding_admin()
+    public function assert_409_when_user_not_verified_and_adding_admin()
     {
         $userId = 1;
 
@@ -54,7 +54,19 @@ class UserUpdateTest extends TestCase
         ]);
         $response = $this->json('PATCH', route('users.update', $userId), $input);
 
-        $response->assertStatus(422);
+        $response->assertStatus(409);
+    }
+
+    /**
+     * @test
+     */
+    public function assert_422_when_try_to_update_all_the_same_values()
+    {
+        $userId = 1;
+
+        $response = $this->json('PATCH', route('users.update', $userId), $this->inputUserData());
+
+        $response->assertStatus(409);
     }
 
     /**

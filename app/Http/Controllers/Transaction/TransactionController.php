@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\Transaction;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Controllers\ApiController;
 
-class TransactionController extends Controller
+class TransactionController extends ApiController
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return void
      */
     public function index()
     {
@@ -20,8 +19,8 @@ class TransactionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
     public function show($id)
     {
