@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\UserStatus;
 use App\Enums\UserType;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Str;
@@ -11,6 +12,7 @@ use Str;
 class User extends Authenticatable
 {
     use Notifiable;
+    use SoftDeletes;
 
     protected $table='users';
 
