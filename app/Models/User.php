@@ -62,4 +62,9 @@ class User extends Authenticatable
     {
         return Str::random(40);
     }
+
+    public function setPasswordAttribute(string $password)
+    {
+        $this->attributes['password'] = bcrypt($password);
+    }
 }
