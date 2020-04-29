@@ -15,13 +15,4 @@ class SellerService
     {
         return Seller::has('products')->get();
     }
-
-    /**
-     * @param int $id
-     * @return Seller|Seller[]|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
-     */
-    public function getSeller(int $id)
-    {
-        return Seller::has('products')->find($id);
-    }
 }

@@ -36,11 +36,8 @@ class BuyerController extends ApiController
      * @param Buyer $buyer
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id)
+    public function show(Buyer $buyer)
     {
-        $buyer = $this->service->getBuyer($id);
-        if (!$buyer)
-            abort(404);
         return $this->jsonOne($buyer);
     }
 }

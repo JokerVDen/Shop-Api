@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Seller;
 
 use App\Http\Controllers\ApiController;
+use App\Models\Seller;
 use App\Services\Seller\SellerService;
 
 class SellerController extends ApiController
@@ -34,11 +35,8 @@ class SellerController extends ApiController
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show(int $id)
+    public function show(Seller $seller)
     {
-        $seller = $this->service->getSeller($id);
-        if (!$seller)
-            abort(404);
         return $this->jsonOne($seller);
     }
 }
