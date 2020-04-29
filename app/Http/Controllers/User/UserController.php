@@ -32,7 +32,7 @@ class UserController extends ApiController
     public function index()
     {
         $users = $this->service->getAllUsers();
-        return $this->showAll($users);
+        return $this->jsonAll($users);
     }
 
     /**
@@ -44,7 +44,7 @@ class UserController extends ApiController
     public function store(UserStoreRequest $request)
     {
         $user = $this->service->storeUser($request->all());
-        return  $this->showOne($user);
+        return  $this->jsonOne($user);
     }
 
     /**
@@ -56,7 +56,7 @@ class UserController extends ApiController
     public function show($id)
     {
         $user = User::findOrFail($id);
-        return  $this->showOne($user);
+        return  $this->jsonOne($user);
     }
 
     /**
@@ -76,7 +76,7 @@ class UserController extends ApiController
             return $this->errorResponse(__('user/error.need_to_specify_a_different_values'), 422);
         }
 
-        return  $this->showOne($updatedUser);
+        return  $this->jsonOne($updatedUser);
     }
 
     /**
@@ -89,6 +89,6 @@ class UserController extends ApiController
     public function destroy(User $user)
     {
         $user->delete();
-        return  $this->showOne($user);
+        return  $this->jsonOne($user);
     }
 }

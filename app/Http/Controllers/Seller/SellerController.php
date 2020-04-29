@@ -25,7 +25,7 @@ class SellerController extends ApiController
     public function index()
     {
         $sellers = $this->service->getAllSellers();
-        return $this->showAll($sellers);
+        return $this->jsonAll($sellers);
     }
 
     /**
@@ -39,6 +39,6 @@ class SellerController extends ApiController
         $seller = $this->service->getSeller($id);
         if (!$seller)
             abort(404);
-        return $this->showOne($seller);
+        return $this->jsonOne($seller);
     }
 }

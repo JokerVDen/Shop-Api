@@ -27,7 +27,7 @@ class BuyerController extends ApiController
     public function index()
     {
         $buyers = $this->service->getAllBuyers();
-        return $this->showAll($buyers);
+        return $this->jsonAll($buyers);
     }
 
     /**
@@ -41,6 +41,6 @@ class BuyerController extends ApiController
         $buyer = $this->service->getBuyer($id);
         if (!$buyer)
             abort(404);
-        return $this->showOne($buyer);
+        return $this->jsonOne($buyer);
     }
 }

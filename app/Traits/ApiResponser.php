@@ -33,9 +33,9 @@ trait ApiResponser
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function showAll(Collection $collection, $code = 200)
+    protected function jsonAll(Collection $collection, $code = 200)
     {
-        return $this->successResponse(['data'=>$collection], $code);
+        return $this->successResponse(['data' => $collection], $code);
     }
 
     /**
@@ -43,8 +43,8 @@ trait ApiResponser
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function showOne($data, $code = 200)
+    protected function jsonOne($data, $code = 200)
     {
-        return $this->successResponse($data, $code);
+        return $this->successResponse(['data' => $data], $code);
     }
 }
