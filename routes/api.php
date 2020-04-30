@@ -9,6 +9,10 @@ Route::apiResource('buyers.categories', 'Buyer\BuyerCategoryController')->only([
 
 //Categories
 Route::apiResource('categories', 'Category\CategoryController');
+Route::apiResource('categories.products', 'Category\CategoryProductController')->only(['index']);
+Route::apiResource('categories.sellers', 'Category\CategorySellerController')->only(['index']);
+Route::apiResource('categories.transactions', 'Category\CategoryTransactionController')->only(['index']);
+Route::apiResource('categories.buyers', 'Category\CategoryBuyerController')->only(['index']);
 
 //Products
 Route::apiResource('products', 'Product\ProductController')->only(['index', 'show']);
