@@ -56,7 +56,7 @@ class UserController extends ApiController
     public function show($id)
     {
         $user = User::findOrFail($id);
-        return  $this->jsonOne($user);
+        return  $this->jsonOne($user, 201);
     }
 
     /**
@@ -73,7 +73,7 @@ class UserController extends ApiController
         } catch (AdminNotVerifiedException $e) {
             return $this->errorResponse(__('user/error.only_verified_user_can_modify_the_admin_field'), 409);
         } catch (UpdateNotDifferentValuesException $e) {
-            return $this->errorResponse(__('user/error.need_to_specify_a_different_values'), 422);
+            return $this->errorResponse(__('errors.need_to_specify_a_different_values'), 422);
         }
 
         return  $this->jsonOne($updatedUser);

@@ -2,63 +2,91 @@
 
 namespace App\Http\Controllers\Category;
 
+use App\Exceptions\User\UpdateNotDifferentValuesException;
 use App\Http\Controllers\ApiController;
+use App\Http\Requests\Category\CategoryStoreRequest;
+use App\Models\Category;
+use App\Services\Category\CategoryService;
 use Illuminate\Http\Request;
 
 class CategoryController extends ApiController
 {
+
+    /**
+     * @var CategoryService
+     */
+    private $service;
+
+    public function __construct(CategoryService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        //
+        $categories = $this->service->getAllCategory();
+
+        return $this->jsonAll($categories);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        //
+        $category = $this->service->storeCategory($request->all());
+
+        return $this->jsonOne($category, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     * @return void
+     * @param Category $category
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        //
+        return $this->jsonOne($category);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $id
-     * @return void
+     * @param Category $category
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        try {
+            $category = $this->service->updateCategory($category, $request->all());
+        } catch (UpdateNotDifferentValuesException $e) {
+            return $this->errorResponse(__('errors.need_to_specify_a_different_values'), 422);
+        }
+
+        return $this->jsonOne($category);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return void
+     * @param Category $category
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        return  $this->jsonOne($category);
     }
 }
