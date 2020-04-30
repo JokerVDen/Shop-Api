@@ -15,4 +15,22 @@ class TransactionService
     {
         return Transaction::all();
     }
+
+    /**
+     * @param Transaction $transaction
+     * @return \App\Models\Category[]|\Illuminate\Database\Eloquent\Collection|mixed
+     */
+    public function getCategories(Transaction $transaction)
+    {
+        return $transaction->product->categories;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @return \App\Models\Seller|mixed
+     */
+    public function getSeller(Transaction $transaction)
+    {
+        return $transaction->product->seller;
+    }
 }
