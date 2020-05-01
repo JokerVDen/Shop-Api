@@ -22,6 +22,7 @@ services:
     build:
       context: ./
       dockerfile: ./docker/php-fpm.docker
+    user: "${LINUX_UID}:${LINUX_GID}"
     volumes:
       - ./:/var/www
     links:
@@ -47,6 +48,7 @@ services:
       DB_HOST: mysql
       REDIS_PORT: ${REDIS_PORT}
       REDIS_HOST: redis
+      XDG_CONFIG_HOME: /var/www/storage
     tty: true
   mysql:
     build:
