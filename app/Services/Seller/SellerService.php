@@ -8,6 +8,8 @@ use App\Enums\ProductStatus;
 use App\Models\Product;
 use App\Models\Seller;
 use App\Models\User;
+use Illuminate\Foundation\Http\FormRequest;
+use Storage;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SellerService
@@ -82,14 +84,14 @@ class SellerService
 
     /**
      * @param User $seller
-     * @param array $data
+     * @param FormRequest $request
      * @return Product|\Illuminate\Database\Eloquent\Model
      */
-    public function createSellersProduct(User $seller, array $data)
+    public function createSellersProduct(User $seller, FormRequest $request)
     {
-        $data = array_merge($data, [
+        $data = array_merge($request->all(), [
             'status'    => ProductStatus::UNAVAILABLE,
-            'image'     => '1.jpg',
+            'image'     => $request->file('image')->store(''),
             'seller_id' => $seller->id,
         ]);
 
@@ -99,25 +101,29 @@ class SellerService
     /**
      * @param Seller $seller
      * @param Product $product
-     * @param array $data
+     * @param FormRequest $request
      * @return Product
      */
-    public function updateSellersProduct(Seller $seller, Product $product, array $data)
+    public function updateSellersProduct(Seller $seller, Product $product, FormRequest $request)
     {
-        $dataCollection = collect($data);
-
         $this->checkSeller($seller, $product);
 
-        $product->fill($dataCollection->only([
+        $product->fill($request->only([
             'name',
             'description',
             'quantity'
-        ])->toArray());
+        ]));
 
-        if ($dataCollection->has('status')) {
-            $product->status = $dataCollection->get('status');
+        if ($request->has('status')) {
+            $product->status = $request->get('status');
             if($product->isAvailable() && $product->categories()->count() == 0)
                 throw new HttpException(409, __('seller/error.product_must_have_at_least_one_category'));
+        }
+
+        if($request->hasFile('image')) {
+            Storage::delete($product->image);
+            $image = $request->file('image')->store('');
+            $product->image = $image;
         }
 
         if ($product->isClean())
@@ -139,6 +145,7 @@ class SellerService
         $this->checkSeller($seller, $product);
 
         $product->delete();
+        Storage::delete($product->image);
 
         return $product;
     }

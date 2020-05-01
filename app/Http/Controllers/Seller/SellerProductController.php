@@ -44,7 +44,7 @@ class SellerProductController extends ApiController
      */
     public function store(ProductStoreRequest $request, User $seller)
     {
-        $product = $this->service->createSellersProduct($seller, $request->all());
+        $product = $this->service->createSellersProduct($seller, $request);
 
         return $this->jsonOne($product);
     }
@@ -60,7 +60,7 @@ class SellerProductController extends ApiController
      */
     public function update(ProductUpdateRequest $request, Seller $seller, Product $product)
     {
-        $product = $this->service->updateSellersProduct($seller, $product, $request->all());
+        $product = $this->service->updateSellersProduct($seller, $product, $request);
 
         return $this->jsonOne($product);
     }
