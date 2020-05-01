@@ -6,9 +6,10 @@ namespace App\Services\User;
 
 use App\Enums\UserStatus;
 use App\Enums\UserType;
-use App\Exceptions\User\AdminNotVerifiedException;
-use App\Exceptions\User\UpdateNotDifferentValuesException;
+use App\Mail\UserCreated;
 use App\Models\User;
+use Mail;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserService
 {
@@ -27,9 +28,10 @@ class UserService
     public function storeUser(array $inputData)
     {
         $otherData = [
-            'password' => bcrypt($inputData['password']),
-            'verified' => UserStatus::UNVERIFIED,
-            'admin'    => UserType::REGULAR,
+            'password'           => bcrypt($inputData['password']),
+            'verified'           => UserStatus::UNVERIFIED,
+            'verification_token' => User::generateVerificationCode(),
+            'admin'              => UserType::REGULAR,
         ];
 
         $data = array_merge($inputData, $otherData);
@@ -41,8 +43,6 @@ class UserService
      * @param User $user
      * @param array $data
      * @return User
-     * @throws AdminNotVerifiedException
-     * @throws UpdateNotDifferentValuesException
      */
     public function updateUser(User $user, array $data)
     {
@@ -60,14 +60,45 @@ class UserService
 
         if (isset($data['admin'])) {
             if (!$user->isVerified())
-                throw new AdminNotVerifiedException();
+                throw new HttpException(409, __('user/error.only_verified_user_can_modify_the_admin_field'));
             $user->admin = $data['admin'];
         }
 
         if (!$user->isDirty())
-            throw new UpdateNotDifferentValuesException();
+            throw new  HttpException(422, __('errors.need_to_specify_a_different_values'));
 
         $user->save();
         return $user;
+    }
+
+    /**
+     * @param string $token
+     * @return bool
+     */
+    public function verifyUser(string $token)
+    {
+        $user = User::where('verification_token', $token)->first();
+
+        if (!$user)
+            return false;
+
+        $user->verification_token = null;
+        $user->verified = UserStatus::VERIFIED;
+        $user->save();
+
+        return true;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function resendVerificationEmail(User $user)
+    {
+        if ($user->isVerified())
+            throw new HttpException(409, __('user/error.This user is already verified!'));
+
+        retry(5, function () use ($user) {
+            Mail::to($user)->send(new UserCreated($user));
+        }, 100);
     }
 }

@@ -47,4 +47,14 @@ trait ApiResponser
     {
         return $this->successResponse(['data' => $data], $code);
     }
+
+    /**
+     * @param $message
+     * @param int $code
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function showMessage($message, int $code = 200)
+    {
+        return $this->successResponse(['data' => $message], $code);
+    }
 }

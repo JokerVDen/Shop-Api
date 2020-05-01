@@ -4,8 +4,8 @@
 namespace App\Services\Category;
 
 
-use App\Exceptions\User\UpdateNotDifferentValuesException;
 use App\Models\Category;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CategoryService
 {
@@ -30,14 +30,13 @@ class CategoryService
      * @param Category $category
      * @param array $data
      * @return Category
-     * @throws UpdateNotDifferentValuesException
      */
     public function updateCategory(Category $category, array $data)
     {
         $category->fill($data);
 
         if (!$category->isDirty())
-            throw new UpdateNotDifferentValuesException();
+            throw new HttpException(422, 'errors.need_to_specify_a_different_values');
 
         $category->save();
 

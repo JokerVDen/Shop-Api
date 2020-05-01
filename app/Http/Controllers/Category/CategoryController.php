@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Category;
 
-use App\Exceptions\User\UpdateNotDifferentValuesException;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Category\CategoryStoreRequest;
 use App\Models\Category;
@@ -67,11 +66,7 @@ class CategoryController extends ApiController
      */
     public function update(Request $request, Category $category)
     {
-        try {
-            $category = $this->service->updateCategory($category, $request->all());
-        } catch (UpdateNotDifferentValuesException $e) {
-            return $this->errorResponse(__('errors.need_to_specify_a_different_values'), 422);
-        }
+        $category = $this->service->updateCategory($category, $request->all());
 
         return $this->jsonOne($category);
     }

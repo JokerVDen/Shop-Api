@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Exceptions\User\AdminNotVerifiedException;
-use App\Exceptions\User\UpdateNotDifferentValuesException;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
@@ -68,13 +66,7 @@ class UserController extends ApiController
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        try {
-            $updatedUser = $this->service->updateUser($user, $request->all());
-        } catch (AdminNotVerifiedException $e) {
-            return $this->errorResponse(__('user/error.only_verified_user_can_modify_the_admin_field'), 409);
-        } catch (UpdateNotDifferentValuesException $e) {
-            return $this->errorResponse(__('errors.need_to_specify_a_different_values'), 422);
-        }
+        $updatedUser = $this->service->updateUser($user, $request->all());
 
         return  $this->jsonOne($updatedUser);
     }
@@ -91,4 +83,29 @@ class UserController extends ApiController
         $user->delete();
         return  $this->jsonOne($user);
     }
+
+    /**
+     * @param $token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function verify($token)
+    {
+        $verified = $this->service->verifyUser($token);
+        if (!$verified)
+            abort(404);
+
+        return $this->showMessage(__('The account has been verified successful!'));
+    }
+
+    /**
+     * @param $token
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function resend(User $user)
+    {
+        $this->service->resendVerificationEmail($user);
+
+        return $this->showMessage(__('The verification email has been resend!'));
+    }
+
 }
