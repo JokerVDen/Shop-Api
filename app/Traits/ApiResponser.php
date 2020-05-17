@@ -4,6 +4,8 @@
 namespace App\Traits;
 
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
 trait ApiResponser
@@ -35,17 +37,25 @@ trait ApiResponser
      */
     protected function jsonAll(Collection $collection, $code = 200)
     {
-        return $this->successResponse(['data' => $collection], $code);
+        if ($collection->isEmpty()) {
+            return $this->successResponse(['data' => $collection], $code);
+        }
+
+        return $this->successResponse([
+            'data' => $this->toResourceCollection($collection)
+        ], $code);
     }
 
     /**
-     * @param $data
+     * @param $model
      * @param int $code
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function jsonOne($data, $code = 200)
+    protected function jsonOne(Model $model, $code = 200)
     {
-        return $this->successResponse(['data' => $data], $code);
+        return $this->successResponse([
+            'data' => $this->toResource($model)
+        ], $code);
     }
 
     /**
@@ -56,5 +66,28 @@ trait ApiResponser
     protected function showMessage($message, int $code = 200)
     {
         return $this->successResponse(['data' => $message], $code);
+    }
+
+    /**
+     * @param Model $model
+     * @return JsonResource
+     */
+    protected function toResource(Model $model): JsonResource
+    {
+        $resourceClass = $model->resourceClass;
+
+        return new $resourceClass($model);
+    }
+
+    /**
+     * @param Collection $collection
+     * @return JsonResource
+     */
+
+    protected function toResourceCollection(Collection $collection): JsonResource
+    {
+        $resourceClass = $collection->first()->resourceClass;
+
+        return $resourceClass::collection($collection);
     }
 }

@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Http\Resources\BuyerResource;
 use App\Scopes\BuyerScope;
 
 class Buyer extends User
 {
+    public $resourceClass = BuyerResource::class;
+
     protected static function boot()
     {
         parent::boot();

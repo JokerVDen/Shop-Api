@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\UserStatus;
 use App\Enums\UserType;
+use App\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,6 +14,8 @@ class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
+
+    public $resourceClass = UserResource::class;
 
     protected $table='users';
 
