@@ -6,7 +6,9 @@ namespace App\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Validator;
 
 trait ApiResponser
 {
@@ -33,7 +35,8 @@ trait ApiResponser
     /**
      * @param Collection $collection
      * @param int $code
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\JsonResponse|JsonResource
+     * @throws \Illuminate\Validation\ValidationException
      */
     protected function jsonAll(Collection $collection, $code = 200)
     {
@@ -41,9 +44,7 @@ trait ApiResponser
             return $this->successResponse(['data' => $collection], $code);
         }
 
-        return $this->successResponse([
-            'data' => $this->toResourceCollection($collection)
-        ], $code);
+        return $this->toResourceCollection($collection);
     }
 
     /**
@@ -82,6 +83,7 @@ trait ApiResponser
     /**
      * @param Collection $collection
      * @return JsonResource
+     * @throws \Illuminate\Validation\ValidationException
      */
 
     protected function toResourceCollection(Collection $collection): JsonResource
@@ -89,6 +91,7 @@ trait ApiResponser
         $resourceClass = $collection->first()->resourceClass;
         $collection = $this->filterData($collection, $resourceClass);
         $collection = $this->sortData($collection, $resourceClass);
+        $collection = $this->paginate($collection);
 
         return $resourceClass::collection($collection);
     }
@@ -123,5 +126,28 @@ trait ApiResponser
         }
 
         return $collection;
+    }
+
+    /**
+     * @param Collection $collection
+     * @param int $perPage
+     * @return LengthAwarePaginator
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function paginate(Collection $collection, int $perPage = 10): LengthAwarePaginator
+    {
+        $validated = Validator::validate(request()->all(), [
+            'per_page' => 'integer|min:2'
+        ]);
+
+        $perPage = $validated['per_page'] ?? $perPage;
+
+        $page = LengthAwarePaginator::resolveCurrentPage();
+        $results = $collection->slice(($page - 1) * $perPage, $perPage)->values();
+        $paginated = new LengthAwarePaginator($results, $collection->count(), (int) $perPage, $page, [
+            'path' => LengthAwarePaginator::resolveCurrentPath(),
+        ]);
+
+        return $paginated->appends(request()->all());
     }
 }
