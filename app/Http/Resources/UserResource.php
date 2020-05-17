@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'name'         => (string)$user->name,
             'email'        => (string)$user->email,
             'isVerified'   => (int)$user->verified,
-            'iaAdmin'      => ($user->admin === 'true'),
+            'isAdmin'      => ($user->admin === 'true'),
             'creationDate' => (string)$user->created_at,
             'lastChange'   => (string)$user->updated_at,
             'deleteDate'   => $user->when(isset($this->deleted_at), (string)$this->deleted_at),
