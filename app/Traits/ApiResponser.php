@@ -87,7 +87,41 @@ trait ApiResponser
     protected function toResourceCollection(Collection $collection): JsonResource
     {
         $resourceClass = $collection->first()->resourceClass;
+        $collection = $this->filterData($collection, $resourceClass);
+        $collection = $this->sortData($collection, $resourceClass);
 
         return $resourceClass::collection($collection);
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $resourceClass
+     * @return Collection|mixed
+     */
+    protected function sortData(Collection $collection, string $resourceClass)
+    {
+        if (request()->has('sort_by')) {
+            $attribute = $resourceClass::originalAttribute(request()->sort_by);
+            $collection = $collection->sortBy->{$attribute};
+        }
+        return $collection;
+    }
+
+    /**
+     * @param Collection $collection
+     * @param string $resourceClass
+     * @return Collection
+     */
+    protected function filterData(Collection $collection, string $resourceClass): Collection
+    {
+        foreach (request()->query() as $query => $value) {
+            $attribute = $resourceClass::originalAttribute($query);
+
+            if (isset($attribute, $value)) {
+                $collection = $collection->where($attribute, $value);
+            }
+        }
+
+        return $collection;
     }
 }
