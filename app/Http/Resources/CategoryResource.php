@@ -2,10 +2,17 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class CategoryResource extends JsonResource implements HasOriginalValues
+class CategoryResource extends Resource
 {
+    protected static $originalValues = [
+        'identifier'   => 'id',
+        'title'        => 'name',
+        'details'      => 'description',
+        'creationDate' => 'created_at',
+        'lastChange'   => 'updated_at',
+        'deleteDate'   => 'deleted_at',
+    ];
+
     /**
      * Transform the resource into an array.
      *
@@ -25,44 +32,26 @@ class CategoryResource extends JsonResource implements HasOriginalValues
 
             'links' => [
                 [
-                    'rel' => 'self',
+                    'rel'  => 'self',
                     'href' => route('categories.show', $category->id),
                 ],
                 [
-                    'rel' => 'category.buyers',
+                    'rel'  => 'category.buyers',
                     'href' => route('categories.buyers.index', $category->id),
                 ],
                 [
-                    'rel' => 'category.products',
+                    'rel'  => 'category.products',
                     'href' => route('categories.products.index', $category->id),
                 ],
                 [
-                    'rel' => 'category.sellers',
+                    'rel'  => 'category.sellers',
                     'href' => route('categories.sellers.index', $category->id),
                 ],
                 [
-                    'rel' => 'category.transactions',
+                    'rel'  => 'category.transactions',
                     'href' => route('categories.transactions.index', $category->id),
                 ],
             ]
         ];
-    }
-
-    /**
-     * @param string $key
-     * @return string|null
-     */
-    public static function originalAttribute(string $key): ?string
-    {
-        $originalValues = [
-            'identifier'   => 'id',
-            'title'        => 'name',
-            'details'      => 'description',
-            'creationDate' => 'created_at',
-            'lastChange'   => 'updated_at',
-            'deleteDate'   => 'deleted_at',
-        ];
-
-        return $originalValues[$key] ?? null;
     }
 }

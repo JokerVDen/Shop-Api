@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'signature' =>  \App\Http\Middleware\SignatureMiddleware::class,
+        'transform.resource.input' => \App\Http\Middleware\TransformResourceInput::class,
     ];
 }

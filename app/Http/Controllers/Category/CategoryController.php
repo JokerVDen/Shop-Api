@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Category\CategoryStoreRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Services\Category\CategoryService;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ class CategoryController extends ApiController
 
     public function __construct(CategoryService $service)
     {
+        $this->middleware('transform.resource.input:' . CategoryResource::class)
+            ->only(['store', 'update']);
         $this->service = $service;
     }
 
@@ -25,6 +28,7 @@ class CategoryController extends ApiController
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index()
     {
@@ -36,7 +40,7 @@ class CategoryController extends ApiController
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param CategoryStoreRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(CategoryStoreRequest $request)
@@ -82,6 +86,6 @@ class CategoryController extends ApiController
     {
         $category->delete();
 
-        return  $this->jsonOne($category);
+        return $this->jsonOne($category);
     }
 }

@@ -2,10 +2,17 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class BuyerResource extends JsonResource implements HasOriginalValues
+class BuyerResource extends Resource
 {
+    protected static $originalValues = [
+        'identifier'   => 'id',
+        'name'         => 'name',
+        'email'        => 'email',
+        'isVerified'   => 'verified',
+        'creationDate' => 'created_at',
+        'lastChange'   => 'updated_at',
+        'deleteDate'   => 'deleted_at',
+    ];
     /**
      * Transform the resource into an array.
      *
@@ -51,24 +58,5 @@ class BuyerResource extends JsonResource implements HasOriginalValues
                 ],
             ],
         ];
-    }
-
-    /**
-     * @param string $key
-     * @return string|null
-     */
-    public static function originalAttribute(string $key): ?string
-    {
-        $originalValues = [
-            'identifier'   => 'id',
-            'name'         => 'name',
-            'email'        => 'email',
-            'isVerified'   => 'verified',
-            'creationDate' => 'created_at',
-            'lastChange'   => 'updated_at',
-            'deleteDate'   => 'deleted_at',
-        ];
-
-        return $originalValues[$key] ?? null;
     }
 }

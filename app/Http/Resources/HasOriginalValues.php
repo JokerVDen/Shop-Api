@@ -11,4 +11,10 @@ interface HasOriginalValues
      * @return string|null
      */
     public static function originalAttribute(string $key): ?string;
+
+    /**
+     * @param string $key
+     * @return string|null
+     */
+    public static function transformedAttribute(string $key): ?string;
 }

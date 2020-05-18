@@ -22,6 +22,7 @@ class SellerController extends ApiController
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index()
     {
@@ -32,7 +33,7 @@ class SellerController extends ApiController
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param Seller $seller
      * @return \Illuminate\Http\JsonResponse
      */
     public function show(Seller $seller)

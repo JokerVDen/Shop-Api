@@ -23,6 +23,7 @@ class SellerCategoryController extends ApiController
      *
      * @param Seller $seller
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index(Seller $seller)
     {

@@ -24,6 +24,7 @@ class TransactionCategoryController extends ApiController
      *
      * @param Transaction $transaction
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index(Transaction $transaction)
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Services\User\UserService;
 use Exception;
@@ -19,6 +20,8 @@ class UserController extends ApiController
 
     public function __construct(UserService $service)
     {
+        $this->middleware('transform.resource.input:' . UserResource::class)
+            ->only(['store', 'update']);
         $this->service = $service;
     }
 
@@ -26,6 +29,7 @@ class UserController extends ApiController
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index()
     {
@@ -42,7 +46,7 @@ class UserController extends ApiController
     public function store(UserStoreRequest $request)
     {
         $user = $this->service->storeUser($request->all());
-        return  $this->jsonOne($user);
+        return $this->jsonOne($user);
     }
 
     /**
@@ -54,7 +58,7 @@ class UserController extends ApiController
     public function show($id)
     {
         $user = User::findOrFail($id);
-        return  $this->jsonOne($user, 201);
+        return $this->jsonOne($user, 201);
     }
 
     /**
@@ -68,7 +72,7 @@ class UserController extends ApiController
     {
         $updatedUser = $this->service->updateUser($user, $request->all());
 
-        return  $this->jsonOne($updatedUser);
+        return $this->jsonOne($updatedUser);
     }
 
     /**
@@ -81,7 +85,7 @@ class UserController extends ApiController
     public function destroy(User $user)
     {
         $user->delete();
-        return  $this->jsonOne($user);
+        return $this->jsonOne($user);
     }
 
     /**

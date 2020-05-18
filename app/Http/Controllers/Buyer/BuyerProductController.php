@@ -24,6 +24,7 @@ class BuyerProductController extends ApiController
      *
      * @param Buyer $buyer
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index(Buyer $buyer)
     {

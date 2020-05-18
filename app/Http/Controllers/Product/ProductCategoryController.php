@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\ApiController;
+use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\Product\ProductService;
@@ -17,14 +18,17 @@ class ProductCategoryController extends ApiController
 
     public function __construct(ProductService $service)
     {
-
+        $this->middleware('transform.resource.input:' . ProductResource::class)
+            ->only(['store', 'update']);
         $this->service = $service;
     }
 
     /**
      * Display a listing of the resource.
      *
+     * @param Product $product
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index(Product $product)
     {
@@ -40,6 +44,7 @@ class ProductCategoryController extends ApiController
      * @param Product $product
      * @param Category $category
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, Product $product, Category $category)
     {
@@ -54,7 +59,7 @@ class ProductCategoryController extends ApiController
      * @param Product $product
      * @param Category $category
      * @return \Illuminate\Http\JsonResponse
-     * @throws \HttpException
+     * @throws \HttpException|\Illuminate\Validation\ValidationException
      */
     public function destroy(Product $product, Category $category)
     {

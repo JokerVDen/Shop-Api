@@ -24,6 +24,7 @@ class CategoryProductController extends ApiController
      *
      * @param Category $category
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function index(Category $category)
     {
