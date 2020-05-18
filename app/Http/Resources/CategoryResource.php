@@ -22,6 +22,29 @@ class CategoryResource extends JsonResource implements HasOriginalValues
             'creationDate' => (string)$category->created_at,
             'lastChange'   => (string)$category->updated_at,
             'deleteDate'   => $category->when(isset($this->deleted_at), (string)$this->deleted_at),
+
+            'links' => [
+                [
+                    'rel' => 'self',
+                    'href' => route('categories.show', $category->id),
+                ],
+                [
+                    'rel' => 'category.buyers',
+                    'href' => route('categories.buyers.index', $category->id),
+                ],
+                [
+                    'rel' => 'category.products',
+                    'href' => route('categories.products.index', $category->id),
+                ],
+                [
+                    'rel' => 'category.sellers',
+                    'href' => route('categories.sellers.index', $category->id),
+                ],
+                [
+                    'rel' => 'category.transactions',
+                    'href' => route('categories.transactions.index', $category->id),
+                ],
+            ]
         ];
     }
 

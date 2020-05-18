@@ -24,7 +24,14 @@ class UserResource extends JsonResource implements HasOriginalValues
             'creationDate' => (string)$user->created_at,
             'lastChange'   => (string)$user->updated_at,
             'deleteDate'   => $user->when(isset($this->deleted_at), (string)$this->deleted_at),
+            'links'        => [
+                [
+                    'rel'  => 'self',
+                    'href' => route('users.show', $user->id),
+                ],
+            ],
         ];
+
     }
 
     /**
