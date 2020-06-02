@@ -4,10 +4,12 @@ services:
     build:
       context: ./
       dockerfile: ./docker/nginx.docker
+      args:
+        DOMAIN_NAME: ${DOCKER_NGINX_DOMAIN_NAME}
     depends_on:
       - php-fpm
       - php-cli
-      - mysql
+      - ${DB_HOST}
       - redis
       - node
     volumes:
@@ -26,11 +28,11 @@ services:
     volumes:
       - ./:/var/www
     links:
-      - mysql
+      - ${DB_HOST}
       - redis
     environment:
       DB_PORT: ${DB_PORT}
-      DB_HOST: mysql
+      DB_HOST: ${DB_HOST}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_HOST: redis
   php-cli:
@@ -41,11 +43,11 @@ services:
     volumes:
       - ./:/var/www
     links:
-      - mysql
+      - ${DB_HOST}
       - redis
     environment:
       DB_PORT: ${DB_PORT}
-      DB_HOST: mysql
+      DB_HOST: ${DB_HOST}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_HOST: redis
       XDG_CONFIG_HOME: /var/www/storage
@@ -70,13 +72,13 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     depends_on:
-      - mysql
+      - ${DB_HOST}
     ports:
       - ${PMA_DOCKER_PORT}:${PMA_PORT}
     links:
-      - mysql
+      - ${DB_HOST}
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: ${DB_HOST}
       PMA_USER: ${DB_USERNAME}
       PMA_PASSWORD: ${DB_PASSWORD}
       UPLOAD_LIMIT: 200000000
