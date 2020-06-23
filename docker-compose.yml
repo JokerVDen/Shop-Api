@@ -35,23 +35,6 @@ services:
       DB_HOST: ${DB_HOST}
       REDIS_PORT: ${REDIS_PORT}
       REDIS_HOST: redis
-  php-cli:
-    build:
-      context: ./
-      dockerfile: ./docker/php-cli.docker
-    user: "${LINUX_UID}:${LINUX_GID}"
-    volumes:
-      - ./:/var/www
-    links:
-      - ${DB_HOST}
-      - redis
-    environment:
-      DB_PORT: ${DB_PORT}
-      DB_HOST: ${DB_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_HOST: redis
-      XDG_CONFIG_HOME: /var/www/storage
-    tty: true
   mysql:
     build:
       context: ./
