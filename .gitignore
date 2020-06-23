@@ -17,3 +17,6 @@ yarn.lock
 /.idea/
 /public/mix-manifest.json
 /_ide_helper_models.php
+/public/js/app.js
+/public/css/app.css
+/route.txt
