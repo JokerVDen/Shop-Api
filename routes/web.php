@@ -19,4 +19,7 @@ Route::get('/', function () {
 
 Auth::routes(['register' => false]);
 
+Route::get('/home/my-tokens', 'HomeController@getTokens')->name('personal_tokens');
+Route::get('/home/my-clients', 'HomeController@getClients')->name('personal_clients');
+Route::get('/home/authorized-clients', 'HomeController@getAuthorizedClients')->name('personal_authorized_clients');
 Route::get('/home', 'HomeController@index')->name('home');

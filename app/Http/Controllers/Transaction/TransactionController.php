@@ -15,7 +15,7 @@ class TransactionController extends ApiController
 
     public function __construct(TransactionService $service)
     {
-
+        parent::__construct();
         $this->service = $service;
     }
 

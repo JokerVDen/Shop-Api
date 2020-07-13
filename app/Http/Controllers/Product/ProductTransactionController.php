@@ -15,7 +15,7 @@ class ProductTransactionController extends ApiController
 
     public function __construct(ProductService $service)
     {
-
+        parent::__construct();
         $this->service = $service;
     }
 

@@ -40,9 +40,9 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            \App\Http\Middleware\JsonResponseMiddleware::class,
             'signature:X-Application-Name',
             'throttle:60,1',
-            \App\Http\Middleware\JsonResponseMiddleware::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
 
         'signature' =>  \App\Http\Middleware\SignatureMiddleware::class,
         'transform.resource.input' => \App\Http\Middleware\TransformResourceInput::class,
+        'client.credentials' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
     ];
 }

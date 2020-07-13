@@ -16,6 +16,7 @@ class CategoryBuyerController extends ApiController
 
     public function __construct(CategoryService $service)
     {
+        parent::__construct();
         $this->service = $service;
     }
 

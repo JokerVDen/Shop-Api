@@ -18,6 +18,7 @@ class ProductBuyerTransactionController extends ApiController
 
     public function __construct(ProductService $service)
     {
+        parent::__construct();
         $this->middleware('transform.resource.input:' . TransactionResource::class)
             ->only(['store']);
         $this->service = $service;

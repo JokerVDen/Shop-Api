@@ -15,7 +15,8 @@ class TransactionCategoryController extends ApiController
 
     public function __construct(TransactionService $service)
     {
-
+        $this->middleware('client.credentials')->only(['index']);
+        $this->middleware('auth:api')->except(['index']);
         $this->service = $service;
     }
 

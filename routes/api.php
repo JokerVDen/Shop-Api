@@ -34,6 +34,8 @@ Route::apiResource('transactions.categories', 'Transaction\TransactionCategoryCo
 Route::apiResource('transactions.sellers', 'Transaction\TransactionSellerController')->only(['index']);
 
 //Users
-Route::apiResource('users', 'User\UserController');
+Route::apiResource('users', 'User\UserController')->middleware(\App\Http\Middleware\JsonResponseMiddleware::class);
 Route::name('verify')->get('users/verify/{token}', 'User\UserController@verify');
 Route::name('resend')->get('users/{user}/resend', 'User\UserController@resend');
+
+Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');

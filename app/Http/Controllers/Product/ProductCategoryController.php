@@ -18,6 +18,8 @@ class ProductCategoryController extends ApiController
 
     public function __construct(ProductService $service)
     {
+        $this->middleware('client.credentials')->only(['index']);
+        $this->middleware('api:auth')->except(['index']);
         $this->middleware('transform.resource.input:' . ProductResource::class)
             ->only(['store', 'update']);
         $this->service = $service;
